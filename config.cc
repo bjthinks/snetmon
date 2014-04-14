@@ -5,11 +5,14 @@
 
 #include "util.hh"
 #include "config.hh"
+#include "device.hh"
 
 using namespace std;
 
-void read_config_file()
+vector<Device> read_config_file()
 {
+  vector<Device> result;
+
   const string config_name = string(getenv("HOME")) + "/.snetmon";
   ifstream config_file(config_name.c_str());
 
@@ -40,12 +43,13 @@ void read_config_file()
       }
       const string &community = parsed_line[2];
 
-      cout << "Got device, hostname " << hostname << ", community "
-           << community << '\n';
+      result.push_back(Device(hostname, community));
     } else {
       cerr << config_name << ": " << line_number
            << ": unrecognized command: " << command << '\n';
       exit(1);
     }
   }
+
+  return result;
 }
