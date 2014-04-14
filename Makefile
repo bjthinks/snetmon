@@ -20,3 +20,6 @@ clean:
 
 cleanall: clean
 	rm -f $(PROG) .*.d *~
+
+# Import dependences
+-include $(OFILES:%.o=.%.d)
