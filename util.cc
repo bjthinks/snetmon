@@ -32,3 +32,14 @@ vector<string> words(const string &str, const char *delimiters)
 
   return result;
 }
+
+Pipe::Pipe(const string &command)
+  : pipe_as_file(popen(command.c_str(), "r")),
+    pipe_as_filebuf(pipe_as_file, ios::in),
+    pipe_as_stream(&pipe_as_filebuf)
+{}
+
+Pipe::~Pipe()
+{
+  pclose(pipe_as_file);
+}
