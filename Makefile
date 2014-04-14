@@ -3,6 +3,7 @@ CXXFLAGS = -Wall
 
 OFILES = \
 	config.o \
+	device.o \
 	snetmon.o \
 	util.o
 
