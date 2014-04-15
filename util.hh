@@ -7,8 +7,12 @@
 #include <istream>
 #include <ext/stdio_filebuf.h>
 
-// Return a vector of all nonempty maximal substrings of non-delimiter
-// characters (i.e. "words"), in order of occurrence.
+// Splits a string before/after the first delimiter character
+std::pair<std::string, std::string>
+split(const std::string &str, const char *delimiters = " \t");
+
+// Repeatedly splits a string and returns a vector of its
+// nonempty words.
 std::vector<std::string>
 words(const std::string &str, const char *delimiters = " \t");
 

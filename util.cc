@@ -2,6 +2,16 @@
 
 using namespace std;
 
+pair<string, string> split(const string &str, const char *delimiters)
+{
+  size_t pos = str.find_first_of(delimiters);
+
+  if (pos == string::npos)
+    return make_pair(str, string());
+
+  return make_pair(str.substr(0, pos), str.substr(pos + 1, string::npos));
+}
+
 vector<string> words(const string &str, const char *delimiters)
 {
   // Invariant: all words that come before current_position are in the
