@@ -7,8 +7,9 @@ using namespace std;
 
 unique_ptr<Pipe> Device::query(const string &q)
 {
-  return unique_ptr<Pipe>(new Pipe(string("snmpbulkwalk -Oq -v2c -c")
-                                   + community + ' ' + hostname + ' ' + q));
+  string command = "snmpbulkwalk -Oq -v2c -c" + community + ' '
+    + hostname + ' ' + q;
+  return unique_ptr<Pipe>(new Pipe(command));
 }
 
 template <typename T>
