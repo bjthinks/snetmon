@@ -14,6 +14,7 @@ int main()
   for (int d = 0; d < int(devices.size()); ++d) {
     Device &device = devices[d];
 
+    // Add all of the extant Interfaces to this Device
     unique_ptr<Pipe> p = device.query("IF-MIB::ifIndex");
     string line;
     while (getline(p->stream(), line)) {
@@ -24,10 +25,25 @@ int main()
       }
     }
 
+    // Query and set values
+    device.setOnInterfaces("IF-MIB::ifName", &Interface::setName);
+    device.setOnInterfaces("IF-MIB::ifAlias", &Interface::setAlias);
+    device.setOnInterfaces("IF-MIB::ifDescr", &Interface::setDescription);
+    device.setOnInterfaces("IF-MIB::ifHCInOctets", &Interface::setBytesIn);
+    device.setOnInterfaces("IF-MIB::ifHCOutOctets", &Interface::setBytesOut);
+
+    // Print them
     Device::iterator i;
     for (i = device.begin(); i != device.end(); ++i) {
       int interface_number = i->first;
-      cout << interface_number << '\n';
+      Interface &interface = i->second;
+      cout << interface_number
+           << ": Name=\'" << interface.name()
+           << "\' Alias=\'" << interface.alias()
+           << "\' Description=\'" << interface.description()
+           << "\' BytesIn=" << interface.bytesIn()
+           << " BytesOut=" << interface.bytesOut()
+           << "\n";
     }
   }
 
