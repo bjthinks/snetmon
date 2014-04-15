@@ -40,6 +40,11 @@ public:
     return interfaces.end();
   }
 
+  // Set a value for each Interface using some setter.
+  template <typename T>
+  void setOnInterfaces(const std::string &q,
+                       void (Interface::*is)(const T &));
+
 private:
   std::string hostname;
   std::string community;
