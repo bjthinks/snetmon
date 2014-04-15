@@ -1,5 +1,5 @@
 CXX = g++ -std=c++11
-CXXFLAGS = -Wall
+CXXFLAGS = -Wall -O3
 
 OFILES = \
 	config.o \
