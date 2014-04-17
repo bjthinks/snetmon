@@ -23,8 +23,8 @@ public:
   const std::string &name() const { return name_; }
   const std::string &alias() const { return alias_; }
   const std::string &description() const { return description_; }
-  const int64_t bytesIn() const { return bytesIn_; }
-  const int64_t bytesOut() const { return bytesOut_; }
+  const ByteCounter &bytesIn() const { return bytesIn_; }
+  const ByteCounter &bytesOut() const { return bytesOut_; }
 
 private:
   std::string name_;
