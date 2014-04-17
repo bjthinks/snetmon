@@ -28,6 +28,13 @@ Device::Device(const string &h, const string &c)
   setOnInterfaces("IF-MIB::ifHCOutOctets", &Interface::setBytesOut);
 }
 
+void Device::update()
+{
+  // Update byte counters for each interface
+  setOnInterfaces("IF-MIB::ifHCInOctets", &Interface::setBytesIn);
+  setOnInterfaces("IF-MIB::ifHCOutOctets", &Interface::setBytesOut);
+}
+
 unique_ptr<Pipe> Device::query(const string &q)
 {
   string command = "snmpbulkwalk -Oq -v2c -c" + community + ' '
