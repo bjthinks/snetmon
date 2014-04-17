@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <ctime>
 #include <cstdio>
 #include <istream>
 #include <ext/stdio_filebuf.h>
@@ -35,5 +36,9 @@ private:
   __gnu_cxx::stdio_filebuf<char> pipe_as_filebuf;
   std::istream pipe_as_stream;
 };
+
+// Convert time_t to a pretty human-readable string of the form:
+// "YYYY-MM-DD HH:MM:SS"
+std::string prettytime(time_t);
 
 #endif

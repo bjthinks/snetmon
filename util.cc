@@ -53,3 +53,15 @@ Pipe::~Pipe()
 {
   pclose(pipe_as_file);
 }
+
+string prettytime(time_t t)
+{
+  struct tm *tm_data = localtime(&t);
+
+  const char *format = "%Y-%m-%d %H:%M:%S %z";
+  // Length calculation: "2014-01-01 12:00:00 -0600" --> 25 characters
+  char buf[32];
+  strftime(buf, 32, format, tm_data);
+
+  return string(buf);
+}
