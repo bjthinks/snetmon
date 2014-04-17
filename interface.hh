@@ -2,7 +2,7 @@
 #define INTERFACE_HH
 
 #include <string>
-#include "bytecounter.hh"
+#include "counter.hh"
 
 class Interface
 {
