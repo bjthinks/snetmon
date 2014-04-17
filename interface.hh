@@ -2,6 +2,7 @@
 #define INTERFACE_HH
 
 #include <string>
+#include "bytecounter.hh"
 
 class Interface
 {
@@ -29,8 +30,8 @@ private:
   std::string name_;
   std::string alias_;
   std::string description_;
-  int64_t bytesIn_;
-  int64_t bytesOut_;
+  ByteCounter bytesIn_;
+  ByteCounter bytesOut_;
 };
 
 // Template specializations for setting various types of values
