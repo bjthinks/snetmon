@@ -1,29 +1,29 @@
-#ifndef BYTECOUNTER_HH
-#define BYTECOUNTER_HH
+#ifndef COUNTER_HH
+#define COUNTER_HH
 
 #include <ctime>
 
-class ByteCounter
+class Counter
 {
 public:
   void operator=(const int64_t &val)
   {
-    previous_bytes = last_bytes;
-    last_bytes = val;
+    previous_value = last_value;
+    last_value = val;
     previous_time = last_time;
     last_time = time(NULL);
   }
-  operator int64_t() const { return last_bytes; }
+  operator int64_t() const { return last_value; }
 
   time_t lastUpdateTime() const { return last_time; }
-  int64_t lastUpdateBPS() const
+  int64_t lastUpdateCountsPerSecond() const
   {
-    return 8 * (last_bytes - previous_bytes)
+    return (last_value - previous_value)
       / int64_t(last_time - previous_time);
   }
 
 private:
-  int64_t last_bytes, previous_bytes;
+  int64_t last_value, previous_value;
   time_t last_time, previous_time;
 };
 

@@ -18,9 +18,9 @@ int main()
       Device &device = devices[d];
       device.update();
       Interface &interface = device[1];
-      const ByteCounter &counter = interface.bytesIn();
+      const Counter &counter = interface.bytesIn();
       cout << counter.lastUpdateTime() << ','
-           << counter.lastUpdateBPS() << '\n';
+           << counter.lastUpdateCountsPerSecond() * 8 << '\n';
     }
   }
 

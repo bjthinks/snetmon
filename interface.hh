@@ -23,15 +23,15 @@ public:
   const std::string &name() const { return name_; }
   const std::string &alias() const { return alias_; }
   const std::string &description() const { return description_; }
-  const ByteCounter &bytesIn() const { return bytesIn_; }
-  const ByteCounter &bytesOut() const { return bytesOut_; }
+  const Counter &bytesIn() const { return bytesIn_; }
+  const Counter &bytesOut() const { return bytesOut_; }
 
 private:
   std::string name_;
   std::string alias_;
   std::string description_;
-  ByteCounter bytesIn_;
-  ByteCounter bytesOut_;
+  Counter bytesIn_;
+  Counter bytesOut_;
 };
 
 // Template specializations for setting various types of values
