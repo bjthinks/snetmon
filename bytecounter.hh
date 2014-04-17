@@ -16,10 +16,10 @@ public:
   operator int64_t() const { return last_bytes; }
 
   time_t lastUpdateTime() const { return last_time; }
-  float lastUpdateBPS() const
+  int64_t lastUpdateBPS() const
   {
-    return float(last_bytes - previous_bytes)
-      / float(last_time - previous_time);
+    return 8 * (last_bytes - previous_bytes)
+      / int64_t(last_time - previous_time);
   }
 
 private:
