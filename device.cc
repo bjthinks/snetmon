@@ -5,6 +5,29 @@
 
 using namespace std;
 
+Device::Device(const string &h, const string &c)
+  : hostname(h),
+    community(c)
+{
+  // Add all of the extant Interfaces to this Device
+  unique_ptr<Pipe> p = query("IF-MIB::ifIndex");
+  string line;
+  while (getline(p->stream(), line)) {
+    vector<string> line_words = words(line);
+    if (line_words.size() == 2) {
+      int i = stoi(line_words[1]);
+      addInterface(i);
+    }
+  }
+
+  // Query and set initial values
+  setOnInterfaces("IF-MIB::ifName", &Interface::setName);
+  setOnInterfaces("IF-MIB::ifAlias", &Interface::setAlias);
+  setOnInterfaces("IF-MIB::ifDescr", &Interface::setDescription);
+  setOnInterfaces("IF-MIB::ifHCInOctets", &Interface::setBytesIn);
+  setOnInterfaces("IF-MIB::ifHCOutOctets", &Interface::setBytesOut);
+}
+
 unique_ptr<Pipe> Device::query(const string &q)
 {
   string command = "snmpbulkwalk -Oq -v2c -c" + community + ' '

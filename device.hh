@@ -10,10 +10,7 @@
 class Device
 {
 public:
-  Device(const std::string &h, const std::string &c)
-    : hostname(h),
-      community(c)
-  {}
+  Device(const std::string &h, const std::string &c);
   std::unique_ptr<Pipe> query(const std::string &q);
 
   void addInterface(int i)
