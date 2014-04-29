@@ -41,4 +41,7 @@ private:
 // "YYYY-MM-DD HH:MM:SS"
 std::string prettytime(time_t);
 
+// Sleep until the start of the next UTC minute
+void sleepUntilNextMinute();
+
 #endif

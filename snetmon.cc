@@ -13,7 +13,7 @@ int main()
   vector<Device> devices = read_config_file();
 
   for (;;) {
-    sleep(5);
+    sleepUntilNextMinute();
     for (int d = 0; d < int(devices.size()); ++d) {
       Device &device = devices[d];
       device.update();

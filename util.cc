@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include "util.hh"
 
 using namespace std;
@@ -64,4 +66,13 @@ string prettytime(time_t t)
   strftime(buf, 32, format, tm_data);
 
   return string(buf);
+}
+
+void sleepUntilNextMinute()
+{
+  time_t now = time(NULL);
+  struct tm *tm_data = localtime(&now);
+  // This will be off by one second if the current minute includes
+  // a leap second. Not worth fretting over.
+  sleep(60 - tm_data->tm_sec);
 }
