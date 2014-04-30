@@ -19,8 +19,10 @@ int main()
       device.update();
       Interface &interface = device[1];
       const Counter &counter = interface.bytesIn();
-      cout << prettytime(counter.lastUpdateTime()) << ','
-           << counter.lastUpdateCountsPerSecond() * 8 << '\n';
+      cout << prettytime(device.lastUpdateTime())
+           << ','
+           << counter.lastIntervalCounts() * 8 / device.lastUpdateInterval()
+           << '\n';
     }
   }
 

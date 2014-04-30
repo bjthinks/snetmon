@@ -12,6 +12,8 @@ class Device
 public:
   Device(const std::string &h, const std::string &c);
   void update();
+  int lastUpdateTime() { return last_update; }
+  int lastUpdateInterval() { return last_update - previous_update; }
 
   // The following lets us use the Device as if it were a limited
   // functionality map<int, Interface>.
@@ -35,6 +37,7 @@ private:
   std::string hostname;
   std::string community;
   std::map<int, Interface> interfaces;
+  time_t last_update, previous_update;
 
   std::unique_ptr<Pipe> query(const std::string &q);
   void addInterface(int i)

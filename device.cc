@@ -24,8 +24,8 @@ Device::Device(const string &h, const string &c)
   setOnInterfaces("IF-MIB::ifName", &Interface::setName);
   setOnInterfaces("IF-MIB::ifAlias", &Interface::setAlias);
   setOnInterfaces("IF-MIB::ifDescr", &Interface::setDescription);
-  setOnInterfaces("IF-MIB::ifHCInOctets", &Interface::setBytesIn);
-  setOnInterfaces("IF-MIB::ifHCOutOctets", &Interface::setBytesOut);
+
+  update();
 }
 
 void Device::update()
@@ -33,6 +33,8 @@ void Device::update()
   // Update byte counters for each interface
   setOnInterfaces("IF-MIB::ifHCInOctets", &Interface::setBytesIn);
   setOnInterfaces("IF-MIB::ifHCOutOctets", &Interface::setBytesOut);
+  previous_update = last_update;
+  last_update = time(NULL);
 }
 
 unique_ptr<Pipe> Device::query(const string &q)
