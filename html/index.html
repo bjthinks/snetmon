@@ -3,7 +3,26 @@
   <head>
     <meta charset="UTF-8">
     <title>snetmon</title>
+    <script type="text/javascript" src="d3.min.js"></script>
   </head>
   <body>
+    <svg></svg>
+    <script type="text/javascript">
+var svg = d3.select("svg")
+            .attr('width', 200)
+            .attr('height', 200);
+var coords = [{ x: 50, y: 50},
+              { x: 100, y: 100},
+              { x: 125, y: 50},
+              { x: 150, y: 100}];
+var lineGen = d3.svg.line()
+                .x(function(c) { return c.x; })
+                .y(function(c) { return c.y; })
+                .interpolate('step-before');
+svg.append('path')
+   .attr('d', lineGen(coords))
+   .attr('stroke', 'black')
+   .attr('fill', 'none');
+    </script>
   </body>
 </html>
