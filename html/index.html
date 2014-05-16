@@ -26,11 +26,12 @@ var coords = [{ x: "2014-05-15 06:00:00 -0700", y: 200},
               { x: "2014-05-15 12:00:00 -0700", y: 1000},
               { x: "2014-05-15 15:00:00 -0700", y: 500},
               { x: "2014-05-15 18:00:00 -0700", y: 1500}];
-var graphHeight = 200;
+var graphWidth = 240;
+var graphHeight = 270;
 var yMax = 2000;
 var xScale = d3.time.scale()
                .domain([new Date(2014, 4, 15), new Date(2014, 4, 16)])
-               .range([0, 200]);
+               .range([0, graphWidth]);
 var yScale = d3.scale.linear()
                .domain([0, yMax])
                .range([graphHeight, 0]);
@@ -52,7 +53,7 @@ graph.append('g')
      .attr('transform','translate(0,' + graphHeight + ')')
      .call(xAxis);
 graph.append('g')
-     .attr('transform','translate(200,0)')
+     .attr('transform','translate(' + graphWidth + ',0)')
      .call(yAxis);
 graph.append('g')
      .append('path')
