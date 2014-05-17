@@ -53,8 +53,7 @@ var yScale = d3.scale.linear()
 var xAxis = d3.svg.axis()
               .scale(xScale)
               .orient('bottom')
-              .tickSize(10,0)
-              .ticks(5);
+              .tickSize(10,0);
 var yAxis = d3.svg.axis()
               .scale(yScale)
               .orient('right')
@@ -102,6 +101,7 @@ function resize() {
   canvas.attr('width', canvasWidth);
   var graphWidth = canvasWidth - graphLeftSide - graphRightSide;
   xScale.range([0, graphWidth]);
+  xAxis.ticks(graphWidth / 100);
   graphyAxis.attr('transform','translate(' + graphWidth + ',0)');
   clipBox.attr('width', graphWidth)
   scrollRect.attr('width', graphWidth)
