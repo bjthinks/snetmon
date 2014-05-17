@@ -29,27 +29,23 @@ var coords = [{ x: "2014-05-15 06:00:00 -0700", y: 200},
               { x: "2014-05-15 12:00:00 -0700", y: 1000},
               { x: "2014-05-15 15:00:00 -0700", y: 500},
               { x: "2014-05-15 18:00:00 -0700", y: 1500}];
-var timeParser = d3.time.format("%Y-%m-%d %H:%M:%S %Z").parse;
 
 // Sizing info
 
 var graphLeftSide = 40;
 var graphRightSide = 60;
+var graphTopSide = 20;
+var graphBottomSide = 30;
 var minCanvasWidth = 200;
-var graphHeight = 270;
+var minCanvasHeight = 200;
 var yMax = 2000;
 
-// D3 and DOM elements
+// Instantiate various D3 objects
 
-var canvas = d3.select("svg")
-               .attr('height', 300);
-var graph = canvas.append('g')
-                  .attr('transform','translate(' + graphLeftSide + ',6)');
 var xScale = d3.time.scale()
                .domain([new Date(2014, 4, 15), new Date(2014, 4, 16)]);
 var yScale = d3.scale.linear()
-               .domain([0, yMax])
-               .range([graphHeight, 0]);
+               .domain([0, yMax]);
 var xAxis = d3.svg.axis()
               .scale(xScale)
               .orient('bottom')
@@ -59,17 +55,23 @@ var yAxis = d3.svg.axis()
               .orient('right')
               .tickSize(10,0)
               .tickFormat(d3.format('s'));
+var timeParser = d3.time.format("%Y-%m-%d %H:%M:%S %Z").parse;
 var lineGen = d3.svg.line()
                 .x(function(c) { return xScale(timeParser(c.x)); })
                 .y(function(c) { return yScale(c.y); })
                 .interpolate('step-before');
-var graphxAxis = graph.append('g')
-                      .attr('transform','translate(0,' + graphHeight + ')');
+
+// Add the graph elements to the existing svg DOM tag
+
+var canvas = d3.select("svg");
+var graph = canvas.append('g')
+                  .attr('transform','translate(' + graphLeftSide + ','
+                        + graphTopSide + ')');
+var graphxAxis = graph.append('g');
 var graphyAxis = graph.append('g');
 var clipBox = graph.append('clipPath')
                    .attr('id', 'bbox')
-                   .append('rect')
-                   .attr('height', graphHeight);
+                   .append('rect');
 var graphLine = graph.append('path')
                      .attr('stroke', 'black')
                      .attr('fill', 'none')
@@ -86,8 +88,7 @@ function refresh() {
 }
 // Add a rectangle to intercept mouse events
 var scrollRect = graph.append('rect')
-                      .attr('class', 'scroll')
-                      .attr('height', graphHeight);
+                      .attr('class', 'scroll');
 // Attach the rectangle to a D3 zoom behavior
 var zoomBehavior = d3.behavior.zoom()
                      .on("zoom", refresh);
@@ -97,18 +98,47 @@ zoomBehavior(scrollRect);
 
 function resize() {
   // Things to do whenever the window size changes
-  var canvasWidth = Math.max(document.body.clientWidth, minCanvasWidth);
+
+  // Retrieve and clamp the size of the HTML body element
+  var canvasWidth = Math.max(window.innerWidth - 16, minCanvasWidth);
+  var canvasHeight = Math.max(window.innerHeight - 22, minCanvasHeight);
+
+  // Set the main SVG element size
   canvas.attr('width', canvasWidth);
+  canvas.attr('height', canvasHeight);
+
+  // Compute the size of the graph proper, excluding axes and ticks
   var graphWidth = canvasWidth - graphLeftSide - graphRightSide;
+  var graphHeight = canvasHeight - graphTopSide - graphBottomSide;
+
+  // Set the x and y scale output ranges
   xScale.range([0, graphWidth]);
+  yScale.range([graphHeight, 0]);
+
+  // Make the axes' ticks appear with sensible frequency
   xAxis.ticks(graphWidth / 100);
+  yAxis.ticks(graphHeight / 100);
+
+  // Move the axes to their proper positions
+  graphxAxis.attr('transform','translate(0,' + graphHeight + ')');
   graphyAxis.attr('transform','translate(' + graphWidth + ',0)');
+
+  // Resize the graph's clipping box and the scroll tool
   clipBox.attr('width', graphWidth)
+  clipBox.attr('height', graphHeight);
   scrollRect.attr('width', graphWidth)
+  scrollRect.attr('height', graphHeight);
+
+  // d3.behavior.zoom() apparently needs to know when a scale changes
   zoomBehavior.x(xScale);
+
+  // Redraw everything
   refresh();
 }
+
+// Respond when window size or orientation changes
 window.addEventListener("resize", resize, true);
+window.addEventListener("orientationchange", resize, true);
 
 // Set initial DOM state
 
