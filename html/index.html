@@ -12,7 +12,7 @@
   stroke-width: 1px;
   stroke: #aaa;
 }
-rect {
+.scroll {
   fill: none;
   pointer-events: all;
   cursor: move;
@@ -54,22 +54,26 @@ var lineGen = d3.svg.line()
                 .x(function(c) { return xScale(timeParser(c.x)); })
                 .y(function(c) { return yScale(c.y); })
                 .interpolate('step-before');
-var graphxAxis =
-  graph.append('g')
-       .attr('transform','translate(0,' + graphHeight + ')');
-var graphyAxis =
-  graph.append('g')
-       .attr('transform','translate(' + graphWidth + ',0)');
-var graphLine =
-  graph.append('path')
-       .attr('stroke', 'black')
-       .attr('fill', 'none');
+var graphxAxis = graph.append('g')
+                      .attr('transform','translate(0,' + graphHeight + ')');
+var graphyAxis = graph.append('g')
+                      .attr('transform','translate(' + graphWidth + ',0)');
+graph.append('clipPath')
+     .attr('id', 'bbox')
+     .append('rect')
+     .attr('width', graphWidth)
+     .attr('height', graphHeight);
+var graphLine = graph.append('path')
+                     .attr('stroke', 'black')
+                     .attr('fill', 'none')
+                     .attr('clip-path', 'url(#bbox)');
 function refresh() {
   graphLine.attr('d', lineGen(coords));
   graphxAxis.call(xAxis);
   graphyAxis.call(yAxis);
 }
 var rect = graph.append('rect')
+                .attr('class', 'scroll')
                 .attr('width', graphWidth)
                 .attr('height', graphHeight);
 rect.call(d3.behavior.zoom().x(xScale).on("zoom", refresh));
