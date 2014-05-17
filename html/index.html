@@ -22,21 +22,31 @@
   <body>
     <svg></svg>
     <script type="text/javascript">
-var canvas = d3.select("svg")
-            .attr('width', 300)
-            .attr('height', 300);
-var graph = canvas.append('g').attr('transform','translate(20,6)');
-var timeParser = d3.time.format("%Y-%m-%d %H:%M:%S %Z").parse;
+
+// Input data
+
 var coords = [{ x: "2014-05-15 06:00:00 -0700", y: 200},
               { x: "2014-05-15 12:00:00 -0700", y: 1000},
               { x: "2014-05-15 15:00:00 -0700", y: 500},
               { x: "2014-05-15 18:00:00 -0700", y: 1500}];
-var graphWidth = 240;
+var timeParser = d3.time.format("%Y-%m-%d %H:%M:%S %Z").parse;
+
+// Sizing info
+
+var graphLeftSide = 40;
+var graphRightSide = 60;
+var minCanvasWidth = 200;
 var graphHeight = 270;
 var yMax = 2000;
+
+// D3 and DOM elements
+
+var canvas = d3.select("svg")
+               .attr('height', 300);
+var graph = canvas.append('g')
+                  .attr('transform','translate(' + graphLeftSide + ',6)');
 var xScale = d3.time.scale()
-               .domain([new Date(2014, 4, 15), new Date(2014, 4, 16)])
-               .range([0, graphWidth]);
+               .domain([new Date(2014, 4, 15), new Date(2014, 4, 16)]);
 var yScale = d3.scale.linear()
                .domain([0, yMax])
                .range([graphHeight, 0]);
@@ -56,31 +66,54 @@ var lineGen = d3.svg.line()
                 .interpolate('step-before');
 var graphxAxis = graph.append('g')
                       .attr('transform','translate(0,' + graphHeight + ')');
-var graphyAxis = graph.append('g')
-                      .attr('transform','translate(' + graphWidth + ',0)');
-graph.append('clipPath')
-     .attr('id', 'bbox')
-     .append('rect')
-     .attr('width', graphWidth)
-     .attr('height', graphHeight);
+var graphyAxis = graph.append('g');
+var clipBox = graph.append('clipPath')
+                   .attr('id', 'bbox')
+                   .append('rect')
+                   .attr('height', graphHeight);
 var graphLine = graph.append('path')
                      .attr('stroke', 'black')
                      .attr('fill', 'none')
                      .attr('clip-path', 'url(#bbox)');
+
+// Allow the graph to be horizontally manipulable with mouse drag or
+// wheel events
+
 function refresh() {
+  // Things to do whenever the graph scrolls or zooms
   graphLine.attr('d', lineGen(coords));
   xAxis(graphxAxis);
   yAxis(graphyAxis);
 }
-var rect = graph.append('rect')
-                .attr('class', 'scroll')
-                .attr('width', graphWidth)
-                .attr('height', graphHeight);
-var scrollGraph = d3.behavior.zoom()
-                    .x(xScale)
-                    .on("zoom", refresh);
-scrollGraph(rect);
-refresh();
+// Add a rectangle to intercept mouse events
+var scrollRect = graph.append('rect')
+                      .attr('class', 'scroll')
+                      .attr('height', graphHeight);
+// Attach the rectangle to a D3 zoom behavior
+var zoomBehavior = d3.behavior.zoom()
+                     .on("zoom", refresh);
+zoomBehavior(scrollRect);
+
+// Resize everything appropriately whenever the window changes size
+
+function resize() {
+  // Things to do whenever the window size changes
+  var canvasWidth = Math.max(document.body.clientWidth, minCanvasWidth);
+  canvas.attr('width', canvasWidth);
+  var graphWidth = canvasWidth - graphLeftSide - graphRightSide;
+  xScale.range([0, graphWidth]);
+  graphyAxis.attr('transform','translate(' + graphWidth + ',0)');
+  clipBox.attr('width', graphWidth)
+  scrollRect.attr('width', graphWidth)
+  zoomBehavior.x(xScale);
+  refresh();
+}
+window.addEventListener("resize", resize, true);
+
+// Set initial DOM state
+
+resize();
+
     </script>
   </body>
 </html>
