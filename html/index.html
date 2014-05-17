@@ -69,14 +69,17 @@ var graphLine = graph.append('path')
                      .attr('clip-path', 'url(#bbox)');
 function refresh() {
   graphLine.attr('d', lineGen(coords));
-  graphxAxis.call(xAxis);
-  graphyAxis.call(yAxis);
+  xAxis(graphxAxis);
+  yAxis(graphyAxis);
 }
 var rect = graph.append('rect')
                 .attr('class', 'scroll')
                 .attr('width', graphWidth)
                 .attr('height', graphHeight);
-rect.call(d3.behavior.zoom().x(xScale).on("zoom", refresh));
+var scrollGraph = d3.behavior.zoom()
+                    .x(xScale)
+                    .on("zoom", refresh);
+scrollGraph(rect);
 refresh();
     </script>
   </body>
