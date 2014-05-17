@@ -12,6 +12,11 @@
   stroke-width: 1px;
   stroke: #aaa;
 }
+rect {
+  fill: none;
+  pointer-events: all;
+  cursor: move;
+}
     </style>
   </head>
   <body>
@@ -49,17 +54,26 @@ var lineGen = d3.svg.line()
                 .x(function(c) { return xScale(timeParser(c.x)); })
                 .y(function(c) { return yScale(c.y); })
                 .interpolate('step-before');
-graph.append('g')
-     .attr('transform','translate(0,' + graphHeight + ')')
-     .call(xAxis);
-graph.append('g')
-     .attr('transform','translate(' + graphWidth + ',0)')
-     .call(yAxis);
-graph.append('g')
-     .append('path')
-     .attr('d', lineGen(coords))
-     .attr('stroke', 'black')
-     .attr('fill', 'none');
+var graphxAxis =
+  graph.append('g')
+       .attr('transform','translate(0,' + graphHeight + ')');
+var graphyAxis =
+  graph.append('g')
+       .attr('transform','translate(' + graphWidth + ',0)');
+var graphLine =
+  graph.append('path')
+       .attr('stroke', 'black')
+       .attr('fill', 'none');
+function refresh() {
+  graphLine.attr('d', lineGen(coords));
+  graphxAxis.call(xAxis);
+  graphyAxis.call(yAxis);
+}
+var rect = graph.append('rect')
+                .attr('width', graphWidth)
+                .attr('height', graphHeight);
+rect.call(d3.behavior.zoom().x(xScale).on("zoom", refresh));
+refresh();
     </script>
   </body>
 </html>
