@@ -26,13 +26,6 @@ body {
     <svg></svg>
     <script type="text/javascript">
 
-// Input data
-
-var coords = [{ x: "2014-05-15 06:00:00 -0700", y: 200},
-              { x: "2014-05-15 12:00:00 -0700", y: 1000},
-              { x: "2014-05-15 15:00:00 -0700", y: 500},
-              { x: "2014-05-15 18:00:00 -0700", y: 1500}];
-
 // Sizing info
 
 var graphLeftSide = 40;
@@ -58,9 +51,8 @@ var yAxis = d3.svg.axis()
               .orient('right')
               .tickSize(10,0)
               .tickFormat(d3.format('s'));
-var timeParser = d3.time.format("%Y-%m-%d %H:%M:%S %Z").parse;
 var lineGen = d3.svg.line()
-                .x(function(c) { return xScale(timeParser(c.x)); })
+                .x(function(c) { return xScale(c.x); })
                 .y(function(c) { return yScale(c.y); })
                 .interpolate('step-before');
 
@@ -83,6 +75,7 @@ var graphLine = graph.append('path')
 // Allow the graph to be horizontally manipulable with mouse drag or
 // wheel events
 
+var coords = [];
 function refresh() {
   // Things to do whenever the graph scrolls or zooms
   graphLine.attr('d', lineGen(coords));
@@ -146,6 +139,23 @@ window.addEventListener("orientationchange", resize, true);
 // Set initial DOM state
 
 resize();
+
+// Input data
+
+var timeParser = d3.time.format("%Y-%m-%d %H:%M:%S %Z").parse;
+
+function handledatum(datum) {
+  datum.x = timeParser(datum.x);
+  datum.y = +datum.y;
+}
+
+function handledata(data) {
+  data.forEach(handledatum);
+  coords = data;
+  refresh();
+}
+
+d3.csv("testdata.csv", handledata);
 
     </script>
   </body>
