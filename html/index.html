@@ -5,6 +5,9 @@
     <title>snetmon</title>
     <script type="text/javascript" src="d3.min.js"></script>
     <style type="text/css">
+body {
+  margin: 0;
+}
 .tick {
   font-size: 10px;
 }
@@ -100,8 +103,8 @@ function resize() {
   // Things to do whenever the window size changes
 
   // Retrieve and clamp the size of the HTML body element
-  var canvasWidth = Math.max(window.innerWidth - 16, minCanvasWidth);
-  var canvasHeight = Math.max(window.innerHeight - 22, minCanvasHeight);
+  var canvasWidth = Math.max(window.innerWidth, minCanvasWidth);
+  var canvasHeight = Math.max(window.innerHeight - 6, minCanvasHeight);
 
   // Set the main SVG element size
   canvas.attr('width', canvasWidth);
